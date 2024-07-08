@@ -1,0 +1,46 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Income {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  date      DateTime?
+  amount    Float?
+  source    String?
+}
+
+model Expense {
+  id            String       @id @default(cuid())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  amount        Float?
+  description   String?
+  date          DateTime?
+  typeField     String?
+  expenseType   ExpenseType? @relation(fields: [expenseTypeId], references: [id])
+  expenseTypeId String?
+}
+
+model Period {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  startDate DateTime?
+  endDate   DateTime?
+}
+
+model ExpenseType {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  name        String?
+  description String?
+  expenses    Expense[]
+}
